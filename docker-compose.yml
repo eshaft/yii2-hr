@@ -1,0 +1,27 @@
+version: '2'
+services:
+    nginx:
+        image: nginx:latest
+        ports:
+            - "80:80"
+            - "443:443"
+        depends_on: 
+            - php
+        volumes:
+            - ./hosts:/etc/nginx/conf.d
+            - ./www:/var/www
+            - ./logs:/var/log/nginx
+    php:
+        build: ./docker-images/php
+        volumes:
+            - ./www:/var/www   
+        environment:
+            XDEBUG_CONFIG: "remote_host=172.17.0.1"  
+    postgres:
+        image: postgres:latest
+        ports:
+            - "5432:5432"
+        environment:
+            POSTGRES_PASSWORD: 1234
+        volumes:
+            - ./postgres:/var/lib/postgresql
